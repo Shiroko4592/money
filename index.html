@@ -1,0 +1,188 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>소동화/소은화/소금화 ↔ KRW 환율 계산기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>환율 계산기 — 소동화·소은화·소금화 ↔ KRW</h1>
+
+    <section class="card">
+      <label for="amount">금액</label>
+      <div class="row">
+        <input id="amount" type="number" inputmode="decimal" value="1000" min="0" step="any">
+
+        <select id="currency">
+          <option value="krw">KRW (원)</option>
+          <option value="sd">소동화 (1닢 = 0.92원)</option>
+          <option value="se">소은화 (1닢 = 1,000 소동화)</option>
+          <option value="sg">소금화 (1닢 = 1,000,000 소동화)</option>
+        </select>
+      </div>
+
+      <div class="options">
+        <label><input type="checkbox" id="autoConvert" checked> 자동으로 변환</label>
+        <button id="convertBtn">변환</button>
+        <button id="resetBtn">초기화</button>
+      </div>
+    </section>
+
+    <section class="card results">
+      <h2>결과</h2>
+      <div class="result-row"><span>KRW</span><code id="out-krw">—</code></div>
+      <div class="result-row"><span>소동화</span><code id="out-sd">—</code></div>
+      <div class="result-row"><span>소은화</span><code id="out-se">—</code></div>
+      <div class="result-row"><span>소금화</span><code id="out-sg">—</code></div>
+
+      <p class="note">환율 기준: <strong>소동화 1닢 = 0.92 KRW</strong>, 비율 = <em>1 : 1,000 : 1,000,000</em> (소동화 : 소은화 : 소금화).</p>
+    </section>
+
+    <section class="card info">
+      <h3>설명</h3>
+      <ul>
+        <li>입력한 금액을 선택한 통화 기준으로 받아 나머지 통화들로 모두 변환합니다.</li>
+        <li>숫자는 보기 좋게 천 단위 쉼표와 소수점 6자리까지 표시됩니다.</li>
+        <li>로컬에서 실행하려면 세 파일(index.html, style.css, script.js)을 같은 폴더에 둔 뒤 index.html을 브라우저로 열면 됩니다.</li>
+      </ul>
+    </section>
+
+    <footer>간단한 프로토타입 — 필요하면 추가 기능(역환율 고정, 소수 반올림 규칙, 전자지갑 예시) 더 붙여줄게.</footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+/* style.css */
+:root{
+  --bg:#0f1724; /* dark */
+  --card:#0b1220;
+  --muted:#93a1b5;
+  --accent:#7dd3fc;
+  --glass: rgba(255,255,255,0.03);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:Inter, Noto Sans KR, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';
+  background: linear-gradient(180deg,#071022 0%, #0b1220 100%);
+  color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:24px;
+}
+
+.container{width:100%;max-width:880px}
+ h1{font-size:1.4rem;margin:0 0 16px}
+.card{background:var(--card);padding:16px;border-radius:12px;margin-bottom:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+.row{display:flex;gap:8px;align-items:center}
+input[type=number]{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:var(--glass);color:inherit}
+select{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+.options{display:flex;gap:8px;align-items:center;margin-top:12px}
+button{background:linear-gradient(90deg, rgba(125,211,252,0.12), rgba(125,211,252,0.06));border:1px solid rgba(125,211,252,0.12);padding:8px 12px;border-radius:8px;color:var(--accent);cursor:pointer}
+button:hover{opacity:0.9}
+.results code{display:inline-block;padding:8px 12px;border-radius:6px;background:rgba(255,255,255,0.02);min-width:160px;text-align:right}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+.note{color:var(--muted);font-size:0.9rem;margin-top:12px}
+.info ul{margin:0;padding-left:18px;color:var(--muted)}
+footer{color:var(--muted);text-align:center;margin-top:8px;font-size:0.85rem}
+
+@media (max-width:520px){
+  .row{flex-direction:column}
+  select,input{width:100%}
+  .results code{min-width:120px}
+}
+
+
+// script.js
+(function(){
+  // 기준 환율 / 비율
+  const SD_TO_KRW = 0.92; // 소동화 1닢 = 0.92 KRW
+  const SE_TO_SD = 1000;  // 소은화 1닢 = 1000 소동화
+  const SG_TO_SD = 1000000; // 소금화 1닢 = 1,000,000 소동화
+
+  // 요소
+  const amountEl = document.getElementById('amount');
+  const currencyEl = document.getElementById('currency');
+  const outKRW = document.getElementById('out-krw');
+  const outSD = document.getElementById('out-sd');
+  const outSE = document.getElementById('out-se');
+  const outSG = document.getElementById('out-sg');
+  const convertBtn = document.getElementById('convertBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const autoConvert = document.getElementById('autoConvert');
+
+  function fmt(n){
+    if (!isFinite(n)) return '—';
+    // 6자리 소수까지 표시, 불필요한 0 제거
+    const s = Number(n).toLocaleString('ko-KR', {maximumFractionDigits:6});
+    return s;
+  }
+
+  function toSD(value, from){
+    // 모든 통화를 소동화 기준으로 변환
+    switch(from){
+      case 'krw': return value / SD_TO_KRW; // KRW -> 소동화
+      case 'sd': return value; // already
+      case 'se': return value * SE_TO_SD; // 소은화 -> 소동화
+      case 'sg': return value * SG_TO_SD; // 소금화 -> 소동화
+      default: return NaN;
+    }
+  }
+
+  function fromSD(sdAmount, to){
+    switch(to){
+      case 'krw': return sdAmount * SD_TO_KRW;
+      case 'sd': return sdAmount;
+      case 'se': return sdAmount / SE_TO_SD;
+      case 'sg': return sdAmount / SG_TO_SD;
+      default: return NaN;
+    }
+  }
+
+  function convert(){
+    const raw = Number(amountEl.value);
+    if (!isFinite(raw) || raw < 0) return;
+    const cur = currencyEl.value;
+
+    const sd = toSD(raw, cur);
+    const krw = fromSD(sd, 'krw');
+    const sdOut = fromSD(sd, 'sd');
+    const seOut = fromSD(sd, 'se');
+    const sgOut = fromSD(sd, 'sg');
+
+    outKRW.textContent = fmt(krw) + ' 원';
+    outSD.textContent = fmt(sdOut) + ' 닢';
+    outSE.textContent = fmt(seOut) + ' 닢';
+    outSG.textContent = fmt(sgOut) + ' 닢';
+  }
+
+  convertBtn.addEventListener('click', convert);
+  resetBtn.addEventListener('click', ()=>{
+    amountEl.value = 1000;
+    currencyEl.value = 'krw';
+    convert();
+  });
+
+  if (autoConvert.checked){
+    amountEl.addEventListener('input', convert);
+    currencyEl.addEventListener('change', convert);
+  }
+
+  autoConvert.addEventListener('change', ()=>{
+    if (autoConvert.checked){
+      amountEl.addEventListener('input', convert);
+      currencyEl.addEventListener('change', convert);
+    } else {
+      amountEl.removeEventListener('input', convert);
+      currencyEl.removeEventListener('change', convert);
+    }
+  });
+
+  // 초기 실행
+  convert();
+
+})();
