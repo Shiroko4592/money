@@ -1,7 +1,7 @@
 const rates = {
-  sodong: 0.92,     // 소동화
-  soeun: 10,        // 예: 1 소은화 = 10 소동화
-  sogeum: 100,      // 예: 1 소금화 = 100 소동화
+  sodong: 0.92,    // 소동화
+  soeun: 9.2,      // 소은화 = 10 소동화
+  sogeum: 92       // 소금화 = 100 소동화
 };
 
 window.onload = function () {
@@ -10,11 +10,15 @@ window.onload = function () {
 
 function updateRateList() {
   const list = document.getElementById("rate-list");
-  list.innerHTML = `
-    <li>1 소동화 = ${rates.sodong} KRW</li>
-    <li>1 소은화 = ${rates.soeun * rates.sodong} KRW</li>
-    <li>1 소금화 = ${rates.sogeum * rates.sodong} KRW</li>
-  `;
+  list.innerHTML = "";
+  for (let key in rates) {
+    const li = document.createElement("li");
+    li.textContent = `1 ${currencyName(key)} = ${rates[key]} KRW`;
+    list.appendChild(li);
+  }
+
+  const now = new Date();
+  document.getElementById("updated").textContent = `갱신일: ${now.toLocaleString()}`;
 }
 
 function convertToKRW() {
@@ -28,7 +32,7 @@ function convertToKRW() {
     return;
   }
 
-  const krw = amount * (rates[currency] * (currency === "sodong" ? 1 : 1));
+  const krw = amount * rates[currency];
   result.style.color = "#333";
   result.textContent = `${amount} ${currencyName(currency)} = ${krw.toLocaleString()} KRW`;
 }
@@ -44,9 +48,38 @@ function convertFromKRW() {
     return;
   }
 
-  const value = amount / (rates[currency] * (currency === "sodong" ? 1 : 1));
+  const value = amount / rates[currency];
   result.style.color = "#333";
   result.textContent = `${amount.toLocaleString()} KRW = ${value.toFixed(2)} ${currencyName(currency)}`;
+}
+
+function addCurrency() {
+  const newName = document.getElementById("new-name").value.trim();
+  const newRate = parseFloat(document.getElementById("new-rate").value);
+  const currencySelect = document.getElementById("currency");
+
+  if (!newName || isNaN(newRate) || newRate <= 0) {
+    alert("화폐 이름과 환율 값을 올바르게 입력하세요.");
+    return;
+  }
+
+  const key = newName.toLowerCase();
+  if (rates[key]) {
+    alert("이미 존재하는 화폐입니다.");
+    return;
+  }
+
+  rates[key] = newRate;
+  const option = document.createElement("option");
+  option.value = key;
+  option.textContent = `${newName}`;
+  currencySelect.appendChild(option);
+
+  updateRateList();
+
+  document.getElementById("new-name").value = "";
+  document.getElementById("new-rate").value = "";
+  alert(`${newName} 화폐가 추가되었습니다!`);
 }
 
 function currencyName(code) {
@@ -58,6 +91,6 @@ function currencyName(code) {
     case "sogeum":
       return "소금화";
     default:
-      return "";
+      return code.charAt(0).toUpperCase() + code.slice(1);
   }
 }
