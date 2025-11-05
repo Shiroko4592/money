@@ -15,9 +15,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 360px;
-  max-height: 90vh;
-  overflow-y: auto;
+  width: 340px;
 }
 
 h1 {
@@ -33,7 +31,7 @@ label {
   text-align: left;
 }
 
-input, select {
+input {
   width: 100%;
   padding: 10px;
   margin-top: 6px;
@@ -42,29 +40,8 @@ input, select {
   font-size: 1rem;
 }
 
-.buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-button {
-  width: 48%;
-  padding: 10px;
-  background-color: #4b7bec;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: #3867d6;
-}
-
 #result {
-  margin-top: 15px;
+  margin-top: 20px;
   font-weight: bold;
   color: #333;
   min-height: 24px;
@@ -92,30 +69,4 @@ button:hover {
   font-size: 0.8rem;
   color: #888;
   margin-top: 6px;
-}
-
-.add-currency {
-  margin-top: 25px;
-  border-top: 1px solid #eee;
-  padding-top: 15px;
-  text-align: left;
-}
-
-.add-currency h2 {
-  font-size: 1rem;
-  margin-bottom: 8px;
-  color: #444;
-}
-
-.add-currency input {
-  margin-bottom: 8px;
-}
-
-.add-currency button {
-  width: 100%;
-  background-color: #20bf6b;
-}
-
-.add-currency button:hover {
-  background-color: #0fb85f;
 }
