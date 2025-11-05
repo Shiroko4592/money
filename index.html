@@ -1,57 +1,37 @@
-<!-- index.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>소동화/소은화/소금화 ↔ KRW 환율 계산기</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>소화폐 환율 계산기</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
-    <h1>환율 계산기 — 소동화·소은화·소금화 ↔ KRW</h1>
+  <div class="container">
+    <h1>소화폐 ↔ 한화(KRW) 환율 계산기</h1>
 
-    <section class="card">
-      <label for="amount">금액</label>
-      <div class="row">
-        <input id="amount" type="number" inputmode="decimal" value="1000" min="0" step="any">
+    <label for="currency">화폐 단위 선택:</label>
+    <select id="currency">
+      <option value="sodong">소동화 (SDH)</option>
+      <option value="soeun">소은화 (SEH)</option>
+      <option value="sogeum">소금화 (SGH)</option>
+    </select>
 
-        <select id="currency">
-          <option value="krw">KRW (원)</option>
-          <option value="sd">소동화 (1닢 = 0.92원)</option>
-          <option value="se">소은화 (1닢 = 1,000 소동화)</option>
-          <option value="sg">소금화 (1닢 = 1,000,000 소동화)</option>
-        </select>
-      </div>
+    <label for="amount">금액 입력:</label>
+    <input type="number" id="amount" placeholder="금액을 입력하세요" />
 
-      <div class="options">
-        <label><input type="checkbox" id="autoConvert" checked> 자동으로 변환</label>
-        <button id="convertBtn">변환</button>
-        <button id="resetBtn">초기화</button>
-      </div>
-    </section>
+    <div class="buttons">
+      <button onclick="convertToKRW()">→ 한화로 변환</button>
+      <button onclick="convertFromKRW()">← 소화폐로 변환</button>
+    </div>
 
-    <section class="card results">
-      <h2>결과</h2>
-      <div class="result-row"><span>KRW</span><code id="out-krw">—</code></div>
-      <div class="result-row"><span>소동화</span><code id="out-sd">—</code></div>
-      <div class="result-row"><span>소은화</span><code id="out-se">—</code></div>
-      <div class="result-row"><span>소금화</span><code id="out-sg">—</code></div>
+    <p id="result"></p>
 
-      <p class="note">환율 기준: <strong>소동화 1닢 = 0.92 KRW</strong>, 비율 = <em>1 : 1,000 : 1,000,000</em> (소동화 : 소은화 : 소금화).</p>
-    </section>
-
-    <section class="card info">
-      <h3>설명</h3>
-      <ul>
-        <li>입력한 금액을 선택한 통화 기준으로 받아 나머지 통화들로 모두 변환합니다.</li>
-        <li>숫자는 보기 좋게 천 단위 쉼표와 소수점 6자리까지 표시됩니다.</li>
-        <li>로컬에서 실행하려면 세 파일(index.html, style.css, script.js)을 같은 폴더에 둔 뒤 index.html을 브라우저로 열면 됩니다.</li>
-      </ul>
-    </section>
-
-    <footer>간단한 프로토타입 — 필요하면 추가 기능(역환율 고정, 소수 반올림 규칙, 전자지갑 예시) 더 붙여줄게.</footer>
-  </main>
+    <div class="rates">
+      <h2>현재 환율표</h2>
+      <ul id="rate-list"></ul>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
