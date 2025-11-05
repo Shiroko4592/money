@@ -15,7 +15,9 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 340px;
+  width: 360px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 h1 {
@@ -86,3 +88,34 @@ button:hover {
   font-size: 0.9rem;
 }
 
+#updated {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 6px;
+}
+
+.add-currency {
+  margin-top: 25px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  text-align: left;
+}
+
+.add-currency h2 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.add-currency input {
+  margin-bottom: 8px;
+}
+
+.add-currency button {
+  width: 100%;
+  background-color: #20bf6b;
+}
+
+.add-currency button:hover {
+  background-color: #0fb85f;
+}
