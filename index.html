@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>소화폐 자동 환율 계산기</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>소화폐 자동 환율 계산기 — 회원</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -25,8 +25,40 @@
       <h2>화폐 단위 추가</h2>
       <input type="text" id="new-name" placeholder="화폐 이름 (예: 소철화)" />
       <input type="number" id="new-rate" placeholder="1단위당 KRW 값 (예: 3.5)" step="0.01" />
-      <button onclick="addCurrency()">추가하기</button>
+      <button id="add-currency-btn">추가하기</button>
     </div>
+
+    <hr />
+
+    <!-- 회원가입 / 마이페이지 영역 -->
+    <div id="auth-area">
+      <!-- 초기에는 가입 폼이 보인다. 가입 성공 시 영역이 마이페이지 버튼/정보로 교체 -->
+      <div id="signup-form" class="card">
+        <h2>회원 가입</h2>
+        <input type="text" id="user-name" placeholder="이름" />
+        <input type="email" id="user-email" placeholder="이메일" />
+        <input type="password" id="user-password" placeholder="비밀번호" />
+        <button id="signup-btn">가입하기</button>
+        <p class="muted">가입하면 자동으로 로그인됩니다. (로그아웃 기능 없음)</p>
+      </div>
+
+      <div id="mypage" class="card" style="display:none;">
+        <button id="mypage-open-btn">마이페이지</button>
+      </div>
+    </div>
+
+    <!-- 마이페이지 모달(읽기 전용) -->
+    <div id="mypage-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h3>나의 정보 (수정 불가)</h3>
+        <p><strong>이름:</strong> <span id="mp-name"></span></p>
+        <p><strong>이메일:</strong> <span id="mp-email"></span></p>
+        <p><strong>가입일:</strong> <span id="mp-date"></span></p>
+        <p class="muted">이 정보는 절대 변경할 수 없습니다.</p>
+        <button id="close-mp-btn">닫기</button>
+      </div>
+    </div>
+
   </div>
 
   <script src="script.js"></script>
