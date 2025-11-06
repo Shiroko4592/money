@@ -21,6 +21,7 @@ function updateRateList() {
 
   const now = new Date();
   document.getElementById("updated").textContent = `갱신일: ${now.toLocaleString()}`;
+  autoConvert(); // 갱신될 때마다 자동 재계산
 }
 
 function autoConvert() {
@@ -33,21 +34,48 @@ function autoConvert() {
     return;
   }
 
-  // 환율 자동 선택
-  let currency, value;
-  if (amount / rates.sogeum >= 1) {
-    currency = "sogeum";
-    value = amount / rates.sogeum;
-  } else if (amount / rates.soeun >= 1) {
-    currency = "soeun";
-    value = amount / rates.soeun;
-  } else {
-    currency = "sodong";
-    value = amount / rates.sodong;
+  // 금액에 맞는 단위 자동 선택
+  let bestCurrency = null;
+  let bestValue = 0;
+
+  for (let key in rates) {
+    const value = amount / rates[key];
+    if (value >= 1 && value > bestValue) {
+      bestValue = value;
+      bestCurrency = key;
+    }
   }
 
+  // 단위가 너무 작으면 가장 작은 단위(소동화)로 표시
+  if (!bestCurrency) bestCurrency = "sodong";
+
   result.style.color = "#333";
-  result.textContent = `${amount.toLocaleString()} KRW = ${value.toFixed(2)} ${currencyName(currency)}`;
+  result.textContent = `${amount.toLocaleString()} KRW = ${bestValue.toFixed(2)} ${currencyName(bestCurrency)}`;
+}
+
+function addCurrency() {
+  const newName = document.getElementById("new-name").value.trim();
+  const newRate = parseFloat(document.getElementById("new-rate").value);
+
+  if (!newName || isNaN(newRate) || newRate <= 0) {
+    alert("화폐 이름과 환율 값을 올바르게 입력하세요.");
+    return;
+  }
+
+  const key = newName.toLowerCase();
+
+  if (rates[key]) {
+    alert("이미 존재하는 화폐입니다.");
+    return;
+  }
+
+  rates[key] = newRate;
+  alert(`${newName} 화폐가 추가되었습니다!`);
+
+  document.getElementById("new-name").value = "";
+  document.getElementById("new-rate").value = "";
+
+  updateRateList();
 }
 
 function currencyName(code) {
