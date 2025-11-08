@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>소화폐 자동 환율 계산기 — 회원</title>
+  <title>소화폐 자동 환율 계산기 — 닢 표기</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -24,15 +24,13 @@
     <div class="add-currency">
       <h2>화폐 단위 추가</h2>
       <input type="text" id="new-name" placeholder="화폐 이름 (예: 소철화)" />
-      <input type="number" id="new-rate" placeholder="1단위당 KRW 값 (예: 3.5)" step="0.01" />
+      <input type="number" id="new-rate" placeholder="1닢당 KRW 값 (예: 3.5)" step="0.01" />
       <button id="add-currency-btn">추가하기</button>
     </div>
 
     <hr />
 
-    <!-- 회원가입 / 마이페이지 영역 -->
     <div id="auth-area">
-      <!-- 초기에는 가입 폼이 보인다. 가입 성공 시 영역이 마이페이지 버튼/정보로 교체 -->
       <div id="signup-form" class="card">
         <h2>회원 가입</h2>
         <input type="text" id="user-name" placeholder="이름" />
@@ -47,7 +45,6 @@
       </div>
     </div>
 
-    <!-- 마이페이지 모달(읽기 전용) -->
     <div id="mypage-modal" class="modal" style="display:none;">
       <div class="modal-content">
         <h3>나의 정보 (수정 불가)</h3>
