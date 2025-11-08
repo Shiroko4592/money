@@ -34,22 +34,18 @@ function autoConvert() {
     return;
   }
 
-  // 금액에 맞는 단위 자동 선택
-  let bestCurrency = null;
-  let bestValue = 0;
+  // 단위 배열을 1닢 기준으로 내림차순 정렬
+  const units = Object.keys(rates).sort((a, b) => rates[b] - rates[a]);
 
-  for (let key in rates) {
-    const value = amount / rates[key];
-    if (value >= 1 && value > bestValue) {
-      bestValue = value;
+  let bestCurrency = units[units.length - 1]; // 가장 작은 단위로 초기화
+  for (let key of units) {
+    if (amount >= rates[key]) {
       bestCurrency = key;
+      break; // 입력 금액보다 작은 단위가 나오면 바로 선택
     }
   }
 
-  // 단위가 너무 작으면 가장 작은 단위(소동화)로 표시
-  if (!bestCurrency) bestCurrency = "sodong";
   const value = amount / rates[bestCurrency];
-
   result.style.color = "#333";
   result.textContent = `${amount.toLocaleString()} KRW = ${currencyName(bestCurrency)} ${value.toFixed(2)}닢`;
 }
